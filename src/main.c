@@ -1,5 +1,7 @@
 #include <Windows.h>
 
+#include <cairo-win32.h>
+
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
@@ -10,7 +12,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	WNDCLASSEX wcex =
 	{
 		.cbSize = sizeof(WNDCLASSEX),
-		.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC,
+		.style = CS_HREDRAW | CS_VREDRAW,
 		.lpfnWndProc = WndProc,
 		.cbClsExtra = 0,
 		.cbWndExtra = 0,
@@ -64,6 +66,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_DESTROY:
 		PostQuitMessage(0);
+		break;
+
+	case WM_PAINT:
+	{
+		PAINTSTRUCT ps = { 0 };
+		HDC hdc = BeginPaint(hWnd, &ps);
+		cairo_surface_t *surface = cairo_win32_surface_create(hdc);
+		cairo_t *cairo = cairo_create(surface);
+		cairo_rectangle(cairo, 100.0, 100.0, 200.0, 300.0);
+		cairo_stroke(cairo);
+		cairo_select_font_face(cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+		cairo_set_font_size(cairo, 24.0);
+		cairo_move_to(cairo, 100.0, 50.0);
+		cairo_show_text(cairo, "Xin chao");
+		cairo_destroy(cairo);
+		cairo_surface_destroy(surface);
+		EndPaint(hWnd, &ps);
+	}
 		break;
 
 	default:
