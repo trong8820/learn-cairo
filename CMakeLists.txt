@@ -70,4 +70,11 @@ else()
 endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(${PROJECT_NAME} PRIVATE libcairo libpixman-1 libpixman-sse2 libpixman-ssse3)
+target_link_libraries(${PROJECT_NAME} PRIVATE libcairo libpixman-1 libpixman-sse2 libpixman-ssse3 libpng16_static zlibstatic)
+
+if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/data)
+	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_directory
+		${CMAKE_CURRENT_SOURCE_DIR}/data $<TARGET_FILE_DIR:${PROJECT_NAME}>/data
+	)
+endif()

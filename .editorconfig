@@ -1,6 +1,5 @@
 root = true
 
-# Other
 [*]
 charset                     = utf-8
 indent_style                = tab
@@ -10,3 +9,7 @@ trim_trailing_whitespace    = true
 
 [*.md]
 trim_trailing_whitespace    = false
+
+[*.{c,c++,cc,cpp,cppm,cxx,h,h++,hh,hpp,hxx,inl,ipp,ixx,tlh,tli}]
+cpp_space_pointer_reference_alignment = right
+cpp_space_around_binary_operator = ignore
